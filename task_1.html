@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Factorial Animation</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #451ac1, #573ca3);
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      background: #fff;
+      color: #451ac1;
+      border-radius: 15px;
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+      padding: 30px;
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 24px;
+      margin-bottom: 10px;
+      color: #451ac1;
+    }
+
+    .input-container {
+      margin: 20px 0;
+    }
+
+    input[type="text"] {
+      width: calc(100% - 20px);
+      padding: 10px;
+      border: 2px solid #573ca3;
+      border-radius: 8px;
+      font-size: 16px;
+      color: #451ac1;
+      outline: none;
+      text-align: center;
+    }
+
+    input[type="text"]:focus {
+      border-color: #451ac1;
+    }
+
+    .method-selection {
+      display: flex;
+      justify-content: space-around;
+      margin: 20px 0;
+    }
+
+    .method-selection label {
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    button {
+      background: #451ac1;
+      color: #fff;
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #573ca3;
+    }
+
+    .result {
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .step {
+      font-size: 16px;
+      margin-top: 10px;
+    }
+
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Factorial Animation</h1>
+    <div class="input-container">
+      <input type="text" id="numberInput" placeholder="Enter a number" />
+    </div>
+    <div class="method-selection">
+      <label>
+        <input type="radio" name="method" value="iterative" checked />
+        Iterative
+      </label>
+      <label>
+        <input type="radio" name="method" value="recursive" />
+        Recursive
+      </label>
+    </div>
+    <button id="calculateBtn">Calculate</button>
+    <div id="result" class="result"></div>
+  </div>
+
+  <script>
+    document.getElementById("calculateBtn").addEventListener("click", () => {
+      const numberInput = document.getElementById("numberInput").value.trim();
+      const method = document.querySelector('input[name="method"]:checked').value;
+      const resultDiv = document.getElementById("result");
+
+      // Input validation
+      if (!numberInput || isNaN(numberInput) || numberInput <= 0 || !Number.isInteger(parseFloat(numberInput))) {
+        resultDiv.innerHTML = `<p class="error">Please enter a valid positive integer.</p>`;
+        return;
+      }
+
+      const number = parseInt(numberInput, 10);
+      resultDiv.innerHTML = ""; // Clear previous results
+
+      if (method === "iterative") {
+        factorialIterativeAnimation(number, resultDiv);
+      } else {
+        factorialRecursiveAnimation(number, resultDiv);
+      }
+    });
+
+    function factorialIterativeAnimation(num, resultDiv) {
+      let result = 1;
+      let currentStep = 1;
+
+      const interval = setInterval(() => {
+        if (currentStep > num) {
+          clearInterval(interval);
+          resultDiv.innerHTML += `<p class="step">Final result: <strong>${result}</strong></p>`;
+          return;
+        }
+
+        result *= currentStep;
+        resultDiv.innerHTML += `<p class="step">Step ${currentStep}: ${currentStep}! = ${result}</p>`;
+        currentStep++;
+      }, 1000); // 1-second delay between steps
+    }
+
+    function factorialRecursiveAnimation(num, resultDiv, currentStep = 1, currentResult = 1) {
+      if (currentStep > num) {
+        resultDiv.innerHTML += `<p class="step">Final result: <strong>${currentResult}</strong></p>`;
+        return;
+      }
+
+      resultDiv.innerHTML += `<p class="step">Step ${currentStep}: Calculating ${currentStep}! = ${currentStep} * (${currentResult})</p>`;
+
+      setTimeout(() => {
+        factorialRecursiveAnimation(num, resultDiv, currentStep + 1, currentStep * currentResult);
+      }, 1000); // 1-second delay between steps
+    }
+  </script>
+</body>
+</html>
