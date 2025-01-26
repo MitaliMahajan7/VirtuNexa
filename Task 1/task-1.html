@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Factorial Calculator</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #451ac1, #573ca3);
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .container {
+      background: #fff;
+      color: #451ac1;
+      border-radius: 15px;
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+      padding: 30px;
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+    }
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+      }
+      40% {
+        transform: translateY(-20px);
+      }
+      60% {
+        transform: translateY(-10px);
+      }
+    }
+    #calculateBtn.bounce {
+      animation: bounce 1s;
+    }
+    h1 {
+      font-size: 24px;
+      margin-bottom: 10px;
+      color: #451ac1;
+    }
+    .input-container {
+      margin: 20px 0;
+    }
+    input[type="text"] {
+      width: calc(100% - 20px);
+      padding: 10px;
+      border: 2px solid #573ca3;
+      border-radius: 8px;
+      font-size: 16px;
+      color: #451ac1;
+      outline: none;
+      text-align: center;
+    }
+    input[type="text"]:focus {
+      border-color: #451ac1;
+    }
+    .method-selection {
+      display: flex;
+      justify-content: space-around;
+      margin: 20px 0;
+    }
+    .method-selection label {
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button {
+      background: #451ac1;
+      color: #fff;
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #573ca3;
+    }
+    .result {
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+    .result-box {
+      background: #573ca3;
+      color: #fff;
+      border: 3px solid #451ac1;
+      padding: 15px;
+      border-radius: 10px;
+      margin-top: 20px;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+      animation: highlight 1.5s ease-in-out;
+    }
+    @keyframes highlight {
+      0% {
+        background-color: #6c63ff;
+        transform: scale(1);
+      }
+      50% {
+        background-color: #573ca3;
+        transform: scale(1.05);
+      }
+      100% {
+        background-color: #573ca3;
+        transform: scale(1);
+      }
+    }
+    .step {
+      font-size: 16px;
+      margin-top: 10px;
+    }
+    .error {
+      color: red;
+    }
+    body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, #451ac1, #573ca3);
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  .container {
+    background: linear-gradient(135deg, #ffffff, #f5f5f5);
+    color: #451ac1;
+    border-radius: 20px;
+    box-shadow: 
+      0 15px 25px rgba(0, 0, 0, 0.2), 
+      inset 0 -5px 10px rgba(0, 0, 0, 0.05), 
+      0 0 0 5px #fff;
+    padding: 30px;
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .container:before,
+  .container:after {
+    content: "";
+    position: absolute;
+    width: 150%;
+    height: 150%;
+    background: linear-gradient(45deg, rgba(255, 0, 150, 0.3), rgba(0, 120, 255, 0.3));
+    filter: blur(50px);
+    z-index: -1;
+    animation: float 6s ease-in-out infinite;
+  }
+  .container:before {
+    top: -50%;
+    left: -50%;
+    animation-delay: 0s;
+  }
+  .container:after {
+    bottom: -50%;
+    right: -50%;
+    animation-delay: 3s;
+  }
+  @keyframes float {
+    0%, 100% {
+      transform: translate(0, 0);
+    }
+    50% {
+      transform: translate(10px, 10px);
+    }
+  }
+  h1 {
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: #451ac1;
+  }
+  .input-container {
+    margin: 20px 0;
+  }
+  input[type="text"] {
+    width: calc(100% - 20px);
+    padding: 10px;
+    border: 2px solid #573ca3;
+    border-radius: 8px;
+    font-size: 16px;
+    color: #451ac1;
+    outline: none;
+    text-align: center;
+  }
+
+  input[type="text"]:focus {
+    border-color: #451ac1;
+  }
+  .method-selection {
+    display: flex;
+    justify-content: space-around;
+    margin: 20px 0;
+  }
+  .method-selection label {
+    position: relative;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 15px;
+    border: 2px solid transparent;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #ffffff, #f5f5f5);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2), inset 0 2px 4px rgba(255, 255, 255, 0.4);
+    transition: all 0.3s;
+  }
+  .method-selection label:hover {
+    border-color: #573ca3;
+    box-shadow: 0 8px 15px rgba(87, 60, 163, 0.4);
+  }
+  .method-selection input[type="radio"] {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #573ca3;
+    border-radius: 50%;
+    outline: none;
+    background: #ffffff;
+    transition: all 0.3s;
+  }
+  .method-selection input[type="radio"]:checked {
+    background: #451ac1;
+    border-color: #ffffff;
+    box-shadow: 0 0 8px #573ca3, 0 0 15px rgba(87, 60, 163, 0.5);
+  }
+  button {
+    background: #451ac1;
+    color: #fff;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  button:hover {
+    background: #573ca3;
+  }
+  .result {
+    margin-top: 20px;
+    font-size: 18px;
+    font-weight: bold;
+  }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Factorial Calculator</h1>
+    <div class="input-container">
+      <input type="text" id="numberInput" placeholder="Enter a number" />
+    </div>
+    <div class="method-selection">
+      <label>
+        <input type="radio" name="method" value="iterative" checked />
+        Iterative
+      </label>
+      <label>
+        <input type="radio" name="method" value="recursive" />
+        Recursive
+      </label>
+    </div>
+    <button id="calculateBtn">Calculate Factorial Stepwise</button>
+    <div id="result" class="result"></div>
+  </div>
+  <script>
+    const calculateBtn = document.getElementById("calculateBtn");
+
+    calculateBtn.addEventListener("click", () => {
+      const numberInput = document.getElementById("numberInput").value.trim();
+      const method = document.querySelector('input[name="method"]:checked').value;
+      const resultDiv = document.getElementById("result");
+
+      calculateBtn.classList.add("bounce");
+      setTimeout(() => {
+        calculateBtn.classList.remove("bounce");
+      }, 2000);
+
+     
+      if (!numberInput || isNaN(numberInput) || numberInput <= 0 || !Number.isInteger(parseFloat(numberInput))) {
+        resultDiv.innerHTML = `<p class="error">Please enter a valid positive integer.</p>`;
+        return;
+      }
+
+      const number = parseInt(numberInput, 10);
+      resultDiv.innerHTML = ""; 
+
+      if (method === "iterative") {
+        factorialIterativeAnimation(number, resultDiv);
+      } else {
+        factorialRecursiveAnimation(number, resultDiv);
+      }
+    });
+    function factorialIterativeAnimation(num, resultDiv) {
+      let result = 1;
+      let currentStep = 1;
+
+      const interval = setInterval(() => {
+        if (currentStep > num) {
+          clearInterval(interval);
+          resultDiv.innerHTML += `<div class="result-box">Factorial of ${num} (Iterative) : <strong>${result}</strong></div>`;
+          return;
+        }
+
+        result *= currentStep;
+        resultDiv.innerHTML += `<p class="step">Step ${currentStep}: ${currentStep}! = ${result}</p>`;
+        currentStep++;
+      }, 1000); 
+    }
+    function factorialRecursiveAnimation(num, resultDiv, currentStep = 1, currentResult = 1) {
+      if (currentStep > num) {
+        resultDiv.innerHTML += `<div class="result-box">Factorial of ${num} (Recursive) : <strong>${currentResult}</strong></div>`;
+        return;
+      }
+
+      resultDiv.innerHTML += `<p class="step">Step ${currentStep}: Calculating ${currentStep}! = ${currentStep} * (${currentResult})</p>`;
+
+      setTimeout(() => {
+        factorialRecursiveAnimation(num, resultDiv, currentStep + 1, currentStep * currentResult);
+      }, 1000); 
+    }
+  </script>
+</body>
+</html>
