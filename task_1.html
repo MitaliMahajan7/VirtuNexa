@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Factorial Animation</title>
+  <title>Factorial Calculator</title>
   <style>
     body {
       font-family: 'Arial', sans-serif;
@@ -26,6 +26,22 @@
       max-width: 400px;
       width: 100%;
       text-align: center;
+    }
+
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+      }
+      40% {
+        transform: translateY(-20px);
+      }
+      60% {
+        transform: translateY(-10px);
+      }
+    }
+
+    #calculateBtn.bounce {
+      animation: bounce 1s;
     }
 
     h1 {
@@ -85,6 +101,32 @@
       font-weight: bold;
     }
 
+    .result-box {
+      background: #573ca3;
+      color: #fff;
+      border: 3px solid #451ac1;
+      padding: 15px;
+      border-radius: 10px;
+      margin-top: 20px;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+      animation: highlight 1.5s ease-in-out;
+    }
+
+    @keyframes highlight {
+      0% {
+        background-color: #6c63ff;
+        transform: scale(1);
+      }
+      50% {
+        background-color: #573ca3;
+        transform: scale(1.05);
+      }
+      100% {
+        background-color: #573ca3;
+        transform: scale(1);
+      }
+    }
+
     .step {
       font-size: 16px;
       margin-top: 10px;
@@ -97,7 +139,7 @@
 </head>
 <body>
   <div class="container">
-    <h1>Factorial Animation</h1>
+    <h1>Factorial Calculator</h1>
     <div class="input-container">
       <input type="text" id="numberInput" placeholder="Enter a number" />
     </div>
@@ -116,10 +158,18 @@
   </div>
 
   <script>
-    document.getElementById("calculateBtn").addEventListener("click", () => {
+    const calculateBtn = document.getElementById("calculateBtn");
+
+    calculateBtn.addEventListener("click", () => {
       const numberInput = document.getElementById("numberInput").value.trim();
       const method = document.querySelector('input[name="method"]:checked').value;
       const resultDiv = document.getElementById("result");
+
+      // Add bounce animation
+      calculateBtn.classList.add("bounce");
+      setTimeout(() => {
+        calculateBtn.classList.remove("bounce");
+      }, 2000);
 
       // Input validation
       if (!numberInput || isNaN(numberInput) || numberInput <= 0 || !Number.isInteger(parseFloat(numberInput))) {
@@ -144,7 +194,7 @@
       const interval = setInterval(() => {
         if (currentStep > num) {
           clearInterval(interval);
-          resultDiv.innerHTML += `<p class="step">Final result: <strong>${result}</strong></p>`;
+          resultDiv.innerHTML += `<div class="result-box">Factorial of ${num} : <strong>${result}</strong></div>`;
           return;
         }
 
@@ -156,7 +206,7 @@
 
     function factorialRecursiveAnimation(num, resultDiv, currentStep = 1, currentResult = 1) {
       if (currentStep > num) {
-        resultDiv.innerHTML += `<p class="step">Final result: <strong>${currentResult}</strong></p>`;
+        resultDiv.innerHTML += `<div class="result-box">Factorial of ${num} : <strong>${currentResult}</strong></div>`;
         return;
       }
 
