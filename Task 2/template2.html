@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Resume</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(45deg, #5D1D73, #1E1123);
+            --background-color: #ffffff;
+            --text-color: #333333;
+            --primary-color: #5D1D73;
+            --secondary-color: #1E1123;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: var(--text-color);
+        }
+
+        header {
+            background: var(--primary-gradient);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            border-bottom: 2px solid var(--secondary-color);
+        }
+
+        main {
+            padding: 20px;
+            max-width: 800px;
+            margin: 30px auto;
+            background-color: var(--background-color);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: var(--primary-color);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            font-weight: bold;
+            color: var(--primary-color);
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 95%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1rem;
+            color: var(--text-color);
+            background-color: #f9f9f9;
+            transition: background-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            background-color: #fff;
+            border-color: var(--primary-color);
+            outline: none;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .submit-btn {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 12px 25px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            display: block;
+            width: 100%;
+            margin-top: 20px;
+            transition: background 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background: var(--secondary-color);
+        }
+
+        .resume-preview {
+            display: none;
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .resume-preview h3 {
+            color: var(--primary-color);
+            text-align: center;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-top: 20px;
+        }
+
+        .content {
+            font-size: 1rem;
+            margin-bottom: 15px;
+        }
+
+        .content a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .content a:hover {
+            text-decoration: underline;
+        }
+
+        .bold {
+            font-weight: bold;
+        }
+
+        .template-2 {
+            display: flex;
+            width: 100%;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            font-family: 'Segoe UI', sans-serif;
+            color: #333;
+        }
+
+        .template-2 .colored-part {
+            width: 35%;
+            background-color: #5D1D73;
+            padding: 20px;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .template-2 .colored-part .img-cls img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 4px solid white;
+            margin-bottom: 20px;
+        }
+
+        .template-2 .colored-part .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 20px;
+            color: white;
+            text-transform: uppercase;
+            border-bottom: 2px solid white;
+            padding-bottom: 5px;
+            width: 100%;
+        }
+
+        .template-2 .colored-part .content {
+            font-size: 14px;
+            margin-top: 10px;
+            line-height: 1.6;
+            width: 100%;
+        }
+
+        .template-2 .colored-part .content .bold {
+            font-weight: bold;
+            color: #FFD700;
+        }
+
+        .template-2 .content2 {
+            width: 65%;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+
+        .template-2 .content2 .header {
+            margin-bottom: 20px;
+        }
+
+        .template-2 .content2 .header .name {
+            font-size: 24px;
+            font-weight: bold;
+            color: #5D1D73;
+            margin-bottom: 10px;
+        }
+
+        .template-2 .content2 .header .contact-info {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .template-2 .content2 .header .contact-info a {
+            color: #5D1D73;
+            text-decoration: none;
+        }
+
+        .template-2 .content2 .header .contact-info a:hover {
+            text-decoration: underline;
+        }
+
+        .template-2 .content2 .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #5D1D73;
+            text-transform: uppercase;
+            margin-top: 20px;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #5D1D73;
+        }
+
+        .template-2 .content2 .content {
+            font-size: 14px;
+            margin-top: 10px;
+            line-height: 1.6;
+        }
+
+        .template-2 .content2 .content .bold {
+            font-weight: bold;
+        }
+
+        .template-2 .content2 .education-item,
+        .template-2 .content2 .award,
+        .template-2 .content2 .project-item {
+            margin-left: 15px;
+            margin-bottom: 10px;
+        }
+
+        .template-2 .content2 .education-item .bold,
+        .template-2 .content2 .award .bold,
+        .template-2 .content2 .project-item .bold {
+            color: #5D1D73;
+        }
+
+        .button-container {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .button-container .submit-btn {
+            width: 48%;
+            margin: 0;
+        }
+
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+
+            .template-2,
+            .template-2 * {
+                visibility: visible;
+            }
+
+            .template-2 {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100% !important;
+            }
+        }
+
+        #savedResumeAlert {
+            display: none;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #e8f4ff;
+            border-radius: 5px;
+            border: 1px solid #b6d4fe;
+            color: #004085;
+        }
+
+        #clearLastResume {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 10px;
+            transition: opacity 0.3s ease;
+        }
+
+        #clearLastResume:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>Create Your Resume</h1>
+    </header>
+
+    <main>
+        <div id="savedResumeAlert">
+            Your last resume is saved. 
+            <button id="clearLastResume">Clear Saved Resume</button>
+        </div>
+        <h2>Fill Out Your Information</h2>
+
+        <form id="resumeForm">
+            <!-- Personal Info -->
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" id="name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="contact">Contact Info</label>
+                <input type="text" id="contact" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" required>
+            </div>
+
+            <!-- Objective -->
+            <div class="form-group">
+                <label for="objective">Objective</label>
+                <textarea id="objective" required>Looking for new skills and increased my knowledge from our team members of company.</textarea>
+            </div>
+
+            <!-- Skills -->
+            <div class="form-group">
+                <label for="skills">Skills</label>
+                <textarea id="skills" required>Programming Languages: *Proficient in C, Python, HTML5, CSS3, PHP, Core Java.*
+                    Excellent communication & collaboration skills</textarea>
+            </div>
+
+            <!-- Education -->
+            <div class="form-group">
+                <label for="education">Education</label>
+                <textarea id="education" required>*Pursuing*: M.Sc. (Computer Science) from Fergusson College, Pune.
+                    *Graduated*: B.Sc. (Computer Science) from HPT Arts & RYK Science College, Nashik (SPPU University).
+                    CGPA: 9.82 (2023-24)
+                    Passed out 12th From NES Highschool & Junior College through HSC Board in 2021
+                    Percentage of Marks – 91.83%</textarea>
+            </div>
+
+            <!-- Career Summary -->
+            <div class="form-group">
+                <label for="career">Career Summary</label>
+                <textarea id="career" required>Awarded the Blue Cross Scholarship for all three years of undergraduate study.
+                    Recipient of the Best Student Award in the final year of graduation.</textarea>
+            </div>
+
+            <!-- Projects -->
+            <div class="form-group">
+                <label for="projects">Projects</label>
+                <textarea id="projects" required>
+                    - Transfer Certificate Maker
+                    - Airline Reservation System
+                    - 0/1 Knapsack Visualization Case Study
+                    - Football Stadium Ticket Booking System
+                </textarea>
+            </div>
+
+            <!-- Hobbies & Languages -->
+            <div class="form-group">
+                <label for="hobbies">Hobbies & Interests</label>
+                <input type="text" id="hobbies" required>
+            </div>
+
+            <div class="form-group">
+                <label for="languages">Languages</label>
+                <input type="text" id="languages" required>
+            </div>
+
+            <div class="form-group">
+                <label for="imageUpload">Upload Profile Photo</label>
+                <input type="file" id="imageUpload" accept="image/*" required>
+            </div>
+
+            <button type="submit" class="submit-btn">Generate Resume</button>
+        </form>
+
+        <div class="resume-preview">
+            <h3>Generated Resume</h3>
+            <div class="template-2" id="resumeContent">
+                <div class="colored-part">
+                    <div class="img-cls">
+                        <img id="previewImage" style="display: none;">
+                    </div>
+                    <div class="section-title">OBJECTIVE</div>
+                    <div class="content" id="resumeObjective"></div>
+                    <div class="section-title">SUMMARY OF SKILLS</div>
+                    <div class="content" id="resumeSkills"></div>
+                    <div class="section-title">INTEREST & HOBBIES</div>
+                    <div class="content" id="resumeHobbies"></div>
+                    <div class="section-title">LANGUAGE COMPETENCIES</div>
+                    <div class="content" id="resumeLanguages"></div>
+                </div>
+                <div class="content2">
+                    <div class="header">
+                        <div class="name" id="resumeName"></div>
+                        <div class="contact-info" id="resumeContact"></div>
+                    </div>
+                    <div class="section-title">EDUCATIONAL PROFILE</div>
+                    <div class="content" id="resumeEducation"></div>
+                    <div class="section-title">CAREER SUMMARY</div>
+                    <div class="content" id="resumeCareer"></div>
+                    <div class="section-title">PROJECT WORK</div>
+                    <div class="content" id="resumeProjects"></div>
+                </div>
+            </div>
+
+            <!-- Download Button -->
+            <!-- <button id="downloadBtn" class="submit-btn">Download Resume</button> -->
+
+            <div class="button-container">
+                <button id="downloadBtn" class="submit-btn">Download PDF</button>
+                <button id="printBtn" class="submit-btn">Print Resume</button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const imageUpload = document.getElementById('imageUpload');
+        const previewImage = document.getElementById('previewImage');
+
+        imageUpload.addEventListener('change', function (e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    previewImage.style.display = 'block';
+                    previewImage.src = e.target.result;
+                    previewImage.crossOrigin = "anonymous";  // Important for CORS
+                };
+
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Modify your PDF generation code to wait for image load
+        document.getElementById("downloadBtn").addEventListener("click", function () {
+            const elementToCapture = document.getElementById("resumeContent");
+
+            // Wait for image to load
+            previewImage.onload = function () {
+                const options = {
+                    scale: 2,
+                    useCORS: true,
+                    logging: true,
+                    windowWidth: elementToCapture.scrollWidth,
+                    windowHeight: elementToCapture.scrollHeight
+                };
+
+                html2canvas(elementToCapture, options).then(canvas => {
+                    const imgData = canvas.toDataURL("image/png");
+                    const pdf = new jspdf.jsPDF({
+                        orientation: "portrait",
+                        unit: "mm",
+                        format: "a4"
+                    });
+
+                    const pdfWidth = pdf.internal.pageSize.getWidth();
+                    const pdfHeight = pdf.internal.pageSize.getHeight();
+                    const imgRatio = canvas.width / canvas.height;
+
+                    let imgWidth = pdfWidth;
+                    let imgHeight = pdfWidth / imgRatio;
+
+                    if (imgHeight > pdfHeight) {
+                        imgHeight = pdfHeight;
+                        imgWidth = imgHeight * imgRatio;
+                    }
+
+                    pdf.addImage(imgData, 'PNG',
+                        (pdfWidth - imgWidth) / 2,
+                        (pdfHeight - imgHeight) / 2,
+                        imgWidth,
+                        imgHeight
+                    );
+                    pdf.save("resume.pdf");
+                }).catch(error => {
+                    console.error("Error generating PDF:", error);
+                    alert("Error generating PDF. Please check the console for details.");
+                });
+            };
+
+            // Trigger image load if it's already loaded
+            if (previewImage.complete) {
+                previewImage.onload();
+            }
+        });
+        // Function to parse *text* and convert it into bold
+        function parseBoldText(text) {
+            return text.replace(/\*(.*?)\*/g, '<span class="bold">$1</span>');
+        }
+
+        // Handle form submission
+        function updateResumePreview(formData) {
+            document.getElementById("resumeName").textContent = formData.name;
+            document.getElementById("resumeContact").innerHTML = `Mo. No.: ${formData.contact} <br> Email: <a href="mailto:${formData.email}">${formData.email}</a>`;
+            document.getElementById("resumeObjective").innerHTML = parseBoldText(formData.objective.replace(/\n/g, "<br>"));
+            document.getElementById("resumeSkills").innerHTML = parseBoldText(formData.skills.replace(/\n/g, "<br>"));
+            document.getElementById("resumeEducation").innerHTML = parseBoldText(formData.education.replace(/\n/g, "<br>"));
+            document.getElementById("resumeCareer").innerHTML = parseBoldText(formData.career.replace(/\n/g, "<br>"));
+            document.getElementById("resumeProjects").innerHTML = parseBoldText(formData.projects.replace(/\n/g, "<br>"));
+            document.getElementById("resumeHobbies").innerHTML = parseBoldText(formData.hobbies.replace(/\n/g, "<br>"));
+            document.getElementById("resumeLanguages").innerHTML = parseBoldText(formData.languages.replace(/\n/g, "<br>"));
+
+            document.querySelector(".resume-preview").style.display = "block";
+        }
+
+        // Load saved resume on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedData = localStorage.getItem('lastResumeData');
+            if (savedData) {
+                const formData = JSON.parse(savedData);
+                
+                // Fill form fields
+                document.getElementById('name').value = formData.name;
+                document.getElementById('contact').value = formData.contact;
+                document.getElementById('email').value = formData.email;
+                document.getElementById('objective').value = formData.objective;
+                document.getElementById('skills').value = formData.skills;
+                document.getElementById('education').value = formData.education;
+                document.getElementById('career').value = formData.career;
+                document.getElementById('projects').value = formData.projects;
+                document.getElementById('hobbies').value = formData.hobbies;
+                document.getElementById('languages').value = formData.languages;
+                
+                // Show alert and preview
+                document.getElementById('savedResumeAlert').style.display = 'block';
+                updateResumePreview(formData);
+            }
+        });
+
+        // Modified form submission handler
+        document.getElementById("resumeForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            const formData = {
+                name: document.getElementById("name").value,
+                contact: document.getElementById("contact").value,
+                email: document.getElementById("email").value,
+                objective: document.getElementById("objective").value,
+                skills: document.getElementById("skills").value,
+                education: document.getElementById("education").value,
+                career: document.getElementById("career").value,
+                projects: document.getElementById("projects").value,
+                hobbies: document.getElementById("hobbies").value,
+                languages: document.getElementById("languages").value
+            };
+
+            // Save to localStorage
+            localStorage.setItem('lastResumeData', JSON.stringify(formData));
+            document.getElementById('savedResumeAlert').style.display = 'block';
+
+            updateResumePreview(formData);
+
+            // Scroll to preview
+            setTimeout(() => {
+                window.scrollTo({
+                    top: document.querySelector(".resume-preview").offsetTop,
+                    behavior: "smooth"
+                });
+            }, 100);
+        });
+
+        // Clear saved resume handler
+        document.getElementById('clearLastResume').addEventListener('click', function() {
+            localStorage.removeItem('lastResumeData');
+            document.getElementById('savedResumeAlert').style.display = 'none';
+            document.getElementById('resumeForm').reset();
+            document.querySelector('.resume-preview').style.display = 'none';
+        });
+
+        // Handle download button click
+        document.getElementById("downloadBtn").addEventListener("click", function () {
+            const elementToCapture = document.getElementById("resumeContent");
+
+            // Configure options for better rendering
+            const options = {
+                scale: 2,
+                useCORS: true,
+                logging: true,
+                windowWidth: elementToCapture.scrollWidth,
+                windowHeight: elementToCapture.scrollHeight
+            };
+
+            html2canvas(elementToCapture, options).then(canvas => {
+                const imgData = canvas.toDataURL("image/png");
+                const pdf = new jspdf.jsPDF({
+                    orientation: "portrait",
+                    unit: "mm",
+                    format: "a4"
+                });
+
+                // Calculate dimensions
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const pdfHeight = pdf.internal.pageSize.getHeight();
+                const imgRatio = canvas.width / canvas.height;
+
+                let imgWidth = pdfWidth;
+                let imgHeight = pdfWidth / imgRatio;
+
+                if (imgHeight > pdfHeight) {
+                    imgHeight = pdfHeight;
+                    imgWidth = imgHeight * imgRatio;
+                }
+
+                // Add image to PDF
+                pdf.addImage(imgData, 'PNG',
+                    (pdfWidth - imgWidth) / 2,
+                    (pdfHeight - imgHeight) / 2,
+                    imgWidth,
+                    imgHeight
+                );
+
+                pdf.save("resume.pdf");
+            }).catch(error => {
+                console.error("Error generating PDF:", error);
+                alert("Error generating PDF. Please check the console for details.");
+            });
+        });
+
+        document.getElementById('printBtn').addEventListener('click', function() {
+        const resumeContent = document.getElementById('resumeContent').cloneNode(true);
+        const styles = document.querySelectorAll('style');
+        const printWindow = window.open('', '_blank');
+        
+        printWindow.document.write('<html><head><title>Resume</title>');
+        
+        // Include all styles from original document
+        Array.from(styles).forEach(style => {
+            printWindow.document.write(style.outerHTML);
+        });
+        
+        // Add print-specific styles
+        printWindow.document.write(`
+            <style>
+                @media print {
+                    body {
+                        margin: 0;
+                        padding: 0;
+                    }
+                    .template-2 {
+                        width: 100% !important;
+                        box-shadow: none;
+                    }
+                    * {
+                        -webkit-print-color-adjust: exact;
+                        print-color-adjust: exact;
+                    }
+                }
+            </style>
+        `);
+        
+        printWindow.document.write('</head><body>');
+        printWindow.document.write(resumeContent.outerHTML);
+        printWindow.document.write('</body></html>');
+        printWindow.document.close();
+        
+        printWindow.onload = function() {
+            printWindow.focus();
+            printWindow.print();
+            printWindow.close();
+        };
+    });
+    </script>
+
+</body>
+
+</html>
