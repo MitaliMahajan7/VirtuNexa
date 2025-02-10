@@ -5,7 +5,7 @@ TASK 1
 
 An interactive web application to compute the factorial of a number using Iterative and Recursive methods with step-by-step visualization.
 
-🌟 Features
+🌟 Features :
 
 ✅ User-Friendly Interface – Simple and responsive design.
 
