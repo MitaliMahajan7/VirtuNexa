@@ -1,6 +1,8 @@
 # VirtuNexa
 TASK 1
+
 🎯 Factorial Calculator
+
 An interactive web application to compute the factorial of a number using Iterative and Recursive methods with step-by-step visualization.
 
 🌟 Features
@@ -32,11 +34,14 @@ Click "Calculate Factorial Stepwise" and view the result.
 🛠️ Tech Stack
 
 HTML – Structure
+
 CSS – Styling & Animations
+
 JavaScript – Logic & Interaction
 
 
 TASK 2
+
 Resume Builder 📝💼
 
 An interactive web tool that allows users to input their personal details, choose from multiple resume templates, and generate a downloadable resume in PDF format. Built with HTML, CSS, and JavaScript.
