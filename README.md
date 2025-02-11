@@ -1,7 +1,7 @@
 # VirtuNexa
 TASK 1
 
-🎯 Factorial Calculator
+🎯 Factorial Calculator 
 
 An interactive web application to compute the factorial of a number using Iterative and Recursive methods with step-by-step visualization.
 
