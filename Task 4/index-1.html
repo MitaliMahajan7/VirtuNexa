@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Tracker</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <style>
+        /* General Styling */
+        body { 
+            font-family: 'Poppins', sans-serif; 
+            background-color: #f4f4f4; 
+            padding: 20px; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        
+        .container { 
+            max-width: 600px; 
+            background: white; 
+            padding: 20px; 
+            border-radius: 10px; 
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); 
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        /* Input Fields */
+        input {
+            width: calc(100% - 100px);
+            padding: 10px;
+            margin: 10px 0;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            outline: none;
+            font-size: 16px;
+        }
+
+        input:focus {
+            border-color: #007bff;
+        }
+
+        /* Buttons */
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s ease-in-out;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        /* Course Section */
+        .course {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            display: flex;
+            align-items: center;
+            background: #ffffff;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        li input[type="checkbox"] {
+            margin-right: 10px;
+            transform: scale(1.2);
+        }
+
+        .completed {
+            text-decoration: line-through;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+  function StudentTracker() {
+    const [courses, setCourses] = React.useState([]);
+    const [courseName, setCourseName] = React.useState("");
+    const [assignments, setAssignments] = React.useState({});
+    const [newAssignment, setNewAssignment] = React.useState({});
+
+    const addCourse = () => {
+        if (!courseName.trim()) return;
+        setCourses([...courses, courseName]);
+        setAssignments({ ...assignments, [courseName]: [] });
+        setNewAssignment({ ...newAssignment, [courseName]: "" });
+        setCourseName("");
+    };
+
+    const addAssignment = (course) => {
+        if (!newAssignment[course].trim()) return;
+        setAssignments({
+            ...assignments,
+            [course]: [...assignments[course], { name: newAssignment[course], completed: false }]
+        });
+        setNewAssignment({ ...newAssignment, [course]: "" });
+    };
+
+    const toggleCompletion = (course, idx) => {
+        const updatedAssignments = assignments[course].map((assignment, i) => 
+            i === idx ? { ...assignment, completed: !assignment.completed } : assignment
+        );
+        setAssignments({ ...assignments, [course]: updatedAssignments });
+    };
+
+    return (
+        <div className="container">
+            <h1>Student Course & Assignment Tracker</h1>
+            <input 
+                type="text" 
+                value={courseName} 
+                onChange={(e) => setCourseName(e.target.value)} 
+                placeholder="Add Course"
+            />
+            <button onClick={addCourse}>Add Course</button>
+            
+            {courses.map((course, index) => (
+                <div key={index} className="course">
+                    <h2>{course}</h2>
+                    <input 
+                        type="text" 
+                        value={newAssignment[course] || ""} 
+                        onChange={(e) => setNewAssignment({ ...newAssignment, [course]: e.target.value })} 
+                        placeholder="New Assignment"
+                    />
+                    <button onClick={() => addAssignment(course)}>Add</button>
+                    
+                    <ul>
+                        {assignments[course].map((assignment, idx) => (
+                            <li key={idx}>
+                                <input 
+                                    type="checkbox" 
+                                    checked={assignment.completed} 
+                                    onChange={() => toggleCompletion(course, idx)}
+                                />
+                                <span className={assignment.completed ? "completed" : ""}>{assignment.name}</span>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            ))}
+        </div>
+    );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<StudentTracker />);
+
+</script>
+</body>
+</html>
